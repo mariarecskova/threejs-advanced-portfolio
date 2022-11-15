@@ -1,4 +1,4 @@
-import "./style.css";
+import "./style.scss";
 import * as THREE from "three";
 import * as dat from "dat.gui";
 import { OrbitControls } from "https://unpkg.com/three@0.126.1/examples/jsm/controls/OrbitControls.js";
@@ -37,7 +37,9 @@ function generatePlane() {
   //we are looping through every 3 value, because otherwise they are too many values
   //they come after each other in the array: x,y,z- each x,y,z is one invididual vertice
   const randomValues = [];
+  //the random value and array did not match up, if we only loop thorugh every 3rd value, we only will have randomized positions for x
   for (let i = 0; i < array.length; i++) {
+    //here we only activate this if it is the 3rd value- because this part is dependent on it
     if (i % 3 === 0) {
       const x = array[i];
       const y = array[i + 1];
@@ -112,7 +114,7 @@ scene.add(planeMesh); // planeMesh.rotation.x += 0.01;
 generatePlane();
 
 const light = new THREE.DirectionalLight(0xffffff, 1);
-light.position.set(0, 0, -1);
+light.position.set(0, 1, -1);
 scene.add(light);
 
 const backLight = new THREE.DirectionalLight(0xffffff, 1);
@@ -137,6 +139,7 @@ function animate() {
 
   for (let i = 0; i < array.length; i += 3) {
     //to create a pulse effet,   we need this to alter an alternative value, not the og value. the cos always returns a value between -1 to 1. if we keep adding to it, we will have a movement effect
+
     //x
     array[i] = originalPosition[i] + Math.cos(frame + randomValues[i]) * 0.01;
     //y
