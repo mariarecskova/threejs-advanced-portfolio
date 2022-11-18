@@ -271,11 +271,20 @@ addEventListener("click", (e) => {
   gsap.to(camera.position, {
     y: 1000,
     ease: "power3.in",
-    duration: 1.5,
+    duration: 1,
     delay: 2,
+    //change this at the end!!!
+    onComplete: () => {
+      window.location = "https://chriscourses.com/";
+    },
   });
 });
-
+//to maintain the perfect aspect ratio
+addEventListener("resize", () => {
+  camera.aspect = innerWidth / innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+});
 //this runs a loop
 animate();
 
