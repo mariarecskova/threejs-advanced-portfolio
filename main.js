@@ -3,6 +3,7 @@ import * as THREE from "three";
 import * as dat from "dat.gui";
 import { OrbitControls } from "https://unpkg.com/three@0.126.1/examples/jsm/controls/OrbitControls.js";
 import gsap from "gsap";
+import { Float32BufferAttribute, StaticReadUsage } from "three";
 
 //this is to edit the plane
 const gui = new dat.GUI();
@@ -121,6 +122,26 @@ const backLight = new THREE.DirectionalLight(0xffffff, 1);
 light.position.set(0, 0, 1);
 scene.add(backLight);
 
+const starGeometry = new THREE.BufferGeometry();
+const starMaterial = new THREE.PointsMaterial({ color: 0xffffff });
+
+const starVertices = [];
+for (let i = 0; i < 10000; i++) {
+  //gets a range from -1000 to 1000, and for 10000 stars from all dimensions
+  const x = (Math.random() - 0.5) * 2000;
+  const y = (Math.random() - 0.5) * 2000;
+  const z = (Math.random() - 0.5) * 2000;
+  starVertices.push(x, y, z);
+}
+//here we set it as an attribute to the object
+starGeometry.setAttribute(
+  "position",
+  new Float32BufferAttribute(starVertices, 3)
+);
+
+const stars = new THREE.Points(starGeometry, starMaterial);
+scene.add(stars);
+
 //they are undefined in the beginning
 const mouse = {
   x: undefined,
@@ -204,7 +225,56 @@ function animate() {
       },
     });
   }
+  stars.rotation.x += 0.0005;
 }
+
+//docs: https://greensock.com/
+gsap.to("#maria", {
+  opacity: 1,
+  duration: 1.5,
+  y: 0,
+  ease: "expo",
+});
+
+gsap.to("#paragraph", {
+  opacity: 1,
+  duration: 1.5,
+  delay: 0.3,
+  y: 0,
+  ease: "expo",
+});
+
+gsap.to("#projectButton", {
+  opacity: 1,
+  duration: 1.5,
+  delay: 0.6,
+  y: 0,
+  ease: "expo",
+});
+
+document.querySelector("#projectButton");
+addEventListener("click", (e) => {
+  e.preventDefault();
+  gsap.to("#container", {
+    opacity: 0,
+  });
+  gsap.to(camera.position, {
+    z: 25,
+    ease: "power3.inOut",
+    duration: 2,
+  });
+  gsap.to(camera.rotation, {
+    x: 1.57,
+    ease: "power3.inOut",
+    duration: 2,
+  });
+  gsap.to(camera.position, {
+    y: 1000,
+    ease: "power3.in",
+    duration: 1.5,
+    delay: 2,
+  });
+});
 
 //this runs a loop
 animate();
